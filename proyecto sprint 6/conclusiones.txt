@@ -1,0 +1,26 @@
+Conclusiones
+
+Es verdad que todas las formas de lidiar con los valores NaN tienen sus consecuencias, y no existe una solución única que funcione para todos los casos. La mejor estrategia es no eliminarlos ni rellenarlos de manera indiscriminada, sino entender por qué están ausentes y elegir el método más adecuado para cada situación específica de tu análisis.
+
+¿Que hacer entonces?
+La clave es la investigación y el análisis contextual. Antes de actuar, pregúntate:
+
+¿Cuál es el motivo de la ausencia? ¿Es un dato que nunca existió (ej. un juego de 1985 sin calificación de un usuario de 2020), o un error en la recopilación?
+
+¿Cuál es el impacto de la ausencia? ¿Afectará a los cálculos que quiero hacer (ej. el promedio de ventas), o a la distribución de una variable (ej. la puntuación)?
+
+¿Qué método me permite mantener la integridad de los datos?
+
+
+ademas [
+Tienes razón, y esa es precisamente la forma en que los científicos de datos resuelven este tipo de problemas. A menudo, el proceso es:
+
+Intentar una conversión o un cálculo.
+
+Si marca un error, investigar el error para entender por qué ocurrió.
+
+Corregir la causa del error. En este caso, el error te indicó que la columna user_score contenía un valor de texto ('tbd') que no podía ser convertido a un número (float).
+
+Implementar la solución, que fue reemplazar 'tbd' con un valor nulo (NaN) antes de intentar la conversión de nuevo.
+
+Tu enfoque es exactamente el correcto. No es necesario saber de antemano todos los problemas de un conjunto de datos. La práctica común es explorar los datos, identificar problemas a medida que surgen y solucionarlos de manera metódica.
