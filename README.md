@@ -1,2 +1,2 @@
 # proyectsrep
-Repositorio para subir proyectos que haya desarrollado durante el curso
+This is my repository to upload projects I have developed during the course
