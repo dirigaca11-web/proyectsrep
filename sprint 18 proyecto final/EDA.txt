@@ -1,0 +1,113 @@
+
+
+print(" proyecto final")
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import lightgbm as lgb
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import roc_curve
+
+
+
+df_contract= pd.read_csv('C:/Users/drgarciacabo/Music/tripleten/DS/sprint 18 proyecto final/final_provider/contract.csv')
+df_internet= pd.read_csv('C:/Users/drgarciacabo/Music/tripleten/DS/sprint 18 proyecto final/final_provider/internet.csv')
+df_personal= pd.read_csv('C:/Users/drgarciacabo/Music/tripleten/DS/sprint 18 proyecto final/final_provider/personal.csv')
+df_phone= pd.read_csv('C:/Users/drgarciacabo/Music/tripleten/DS/sprint 18 proyecto final/final_provider/phone.csv')
+
+
+#Analisis exploratorio
+print("\n \n contract info:")
+print(df_contract.head())
+df_contract.info()
+
+print("\n \n internet info:")
+print(df_internet.head())
+df_internet.info()
+
+print("\n \n personal info:")
+print(df_personal.head())
+df_personal.info()
+
+print("\n \n phone info:")
+print(df_phone.head())
+df_phone.info()
+
+
+
+
+#Conversiones importantes 
+
+# Convertir a numérico TotalCharges, usando coerce por si hay espacios en blanco
+df_contract['TotalCharges'] = pd.to_numeric(df_contract['TotalCharges'], errors='coerce')
+# Verificamos si hay valores nulos
+print(df_contract['TotalCharges'].isna().sum())
+#llenamos esos NaN con 0
+df_contract['TotalCharges'] = df_contract['TotalCharges'].fillna(0)
+
+
+
+#creamos una columna nueva de objetivo igual a EndDate pero ya en forma binaria
+#si EndDate es NO, entonces tendrá un 0, caso contrario tendrá un 1
+df_contract['target'] = (df_contract['EndDate'] != 'No').astype(int)
+
+
+
+# Convertir BeginDate a datetime
+df_contract['BeginDate'] = pd.to_datetime(df_contract['BeginDate'], format='mixed')
+
+# Para hacer datetime el EndDate simplemente si su valor es 'No', usamos la fecha de corte febrero 2 del 2020
+# caso contrario, usamos la fecha de fin.
+df_contract['EndDate'] = df_contract['EndDate'].replace('No', '2020-02-01')
+df_contract['EndDate'] = pd.to_datetime(df_contract['EndDate'], format='mixed')
+
+# Con las columnas en su formato calculamos los días de permanencia 
+df_contract['tenure'] = (df_contract['EndDate'] - df_contract['BeginDate']).dt.days
+
+print("\n \n contract info updated:")
+print(df_contract.head())
+df_contract.info()
+
+
+
+#EDA 
+#Veremos la diferencia en numero de clientes que cancelan y que no
+plt.figure(figsize=(8, 5))
+sns.countplot(x='target', data=df_contract, palette='viridis')
+plt.title('Distribución de la cancelación de los clientes')
+plt.xlabel('0 No, 1 Sí')
+plt.ylabel('Número de clientes')
+plt.show()
+
+print("porcentajes de cancelación ")
+print(df_contract['target'].value_counts(normalize=True) * 100)
+
+
+#Veremos la relación entre la cancelación y el tipo de contrato
+plt.figure(figsize=(8, 5))
+sns.countplot(x='Type', hue='target', data=df_contract)
+plt.title('Cancelación por contrato')
+plt.xlabel('Tipo de contrato')
+plt.ylabel('Número de clientes')
+plt.legend(title='Churn', labels=['Se queda', 'Se va'])
+plt.show()
+
+
+#Veremos la relación ente las cancelaciones y los cargos mensuales
+plt.figure(figsize=(8, 5))
+sns.boxplot(hue='target', y='MonthlyCharges', data=df_contract, palette='viridis', legend=False)
+plt.title('Distribución de cargos mensuales por cancelación')
+plt.xlabel('0  No, 1 Si)')
+plt.ylabel('Cargos mensuales')
+plt.show()
+
+
+
+
+
+
+
+
+print("siuuuuuuu")
